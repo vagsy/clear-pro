@@ -118,7 +118,6 @@
 import md5 from 'md5'
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions } from 'vuex'
-import { timeFix } from '@/utils/util'
 import { getSmsCaptcha, get2step } from '@/api/login'
 
 export default {
@@ -249,13 +248,6 @@ export default {
     loginSuccess (res) {
       console.log(res)
       this.$router.push({ name: 'dashboard' })
-      // 延迟 1 秒显示欢迎信息
-      setTimeout(() => {
-        this.$notification.success({
-          message: '欢迎',
-          description: `${timeFix()}，欢迎回来`
-        })
-      }, 1000)
     },
     requestFailed (err) {
       this.$notification['error']({

@@ -11,14 +11,14 @@
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
             <a-form-item label="业务名称">
-              <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
+              <a-select v-model="queryParam.name" placeholder="请选择">
                 <a-select-option value="0">普通文本</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="回调状态">
-              <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
+              <a-select v-model="queryParam.cb" placeholder="请选择">
                 <a-select-option value="0">所有</a-select-option>
                 <a-select-option value="1">不需要回调</a-select-option>
                 <a-select-option value="2">等待回调</a-select-option>
@@ -28,60 +28,89 @@
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="数据状态">
-              <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
-                <a-select-option value="0">普通文本</a-select-option>
+              <a-select v-model="queryParam.data" placeholder="请选择">
+                <a-select-option value="0">所有</a-select-option>
+                <a-select-option value="1">通过</a-select-option>
+                <a-select-option value="2">嫌疑</a-select-option>
+                <a-select-option value="3">不通过</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="命中原因">
-              <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
-                <a-select-option value="0">普通文本</a-select-option>
+              <a-select v-model="queryParam.hit" placeholder="请选择">
+                <a-select-option value="0">所有</a-select-option>
+                <a-select-option value="1">正常</a-select-option>
+                <a-select-option value="2">色情</a-select-option>
+                <a-select-option value="3">广告</a-select-option>
+                <a-select-option value="4">暴恐</a-select-option>
+                <a-select-option value="5">违禁</a-select-option>
+                <a-select-option value="6">涉政</a-select-option>
+                <a-select-option value="7">谩骂</a-select-option>
+                <a-select-option value="8">灌水</a-select-option>
+                <a-select-option value="9">用户账号黑名单</a-select-option>
+                <a-select-option value="10">用户账号白名单</a-select-option>
+                <a-select-option value="11">IP黑名单</a-select-option>
+                <a-select-option value="12">IP白名单</a-select-option>
+                <a-select-option value="13">IP地区限制</a-select-option>
+                <a-select-option value="14">设备黑名单</a-select-option>
+                <a-select-option value="15">IP地区限制</a-select-option>
+                <a-select-option value="16">设备白名单</a-select-option>
+                <a-select-option value="17">URL黑名单</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="内容检索">
-              <a-input v-model="queryParam.id" placeholder=""/>
+              <a-input v-model="queryParam.retrieval" placeholder="请输入内容检索"/>
             </a-form-item>
           </a-col>
           
           <template v-if="advanced">
             <a-col :md="8" :sm="24">
               <a-form-item label="用户标识">
-                <a-input v-model="queryParam.id" placeholder=""/>
+                <a-input v-model="queryParam.usermark" placeholder="请输入用户标识"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="数据标识">
-                <a-input v-model="queryParam.id" placeholder=""/>
+                <a-input v-model="queryParam.datamark" placeholder="请输入数据标识"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="taskID">
-                <a-input v-model="queryParam.id" placeholder=""/>
+                <a-input v-model="queryParam.taskid" placeholder="请输入taskID"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="IP地址">
-                <a-input v-model="queryParam.id" placeholder=""/>
+                <a-input v-model="queryParam.ipaddress" placeholder="请输入IP地址"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="数据类型">
-                <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
+                <a-select v-model="queryParam.datatype" placeholder="请选择">
+                  <a-select-option value="0">所有</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :md="11" :sm="24">
+            <a-col :md="12" :sm="24">
               <a-form-item label="时间范围">
-                <a-range-picker
-                  v-decorator="['range-time-picker', rangeConfig]"
-                  show-time
+                <a-date-picker
+                  :disabledDate="disabledStartDate"
+                  showTime
                   format="YYYY-MM-DD HH:mm:ss"
+                  v-model="queryParam.startValue"
+                  @openChange="handleStartOpenChange"
+                />
+                -
+                <a-date-picker
+                  :disabledDate="disabledEndDate"
+                  showTime
+                  format="YYYY-MM-DD HH:mm:ss"
+                  v-model="queryParam.endValue"
+                  :open="endOpen"
+                  @openChange="handleEndOpenChange"
                 />
               </a-form-item>
             </a-col>
@@ -138,7 +167,6 @@ import { STable } from '@/components'
 import StepByStepModal from './modules/StepByStepModal'
 import CreateForm from './modules/CreateForm'
 import { getRoleList, getServiceList } from '@/api/manage'
-
 const statusMap = {
   0: {
     status: 'default',
@@ -173,8 +201,17 @@ export default {
       mdl: {},
       // 高级搜索 展开/关闭
       advanced: false,
+      endOpen: false,
       // 查询参数
-      queryParam: {},
+      queryParam: {
+        name: '0',
+        cb: '0',
+        data: '0',
+        hit: '0',
+        datatype: '0',
+        startValue: moment(moment().format('YYYY-MM-DD 00:00:00')),
+        endValue: moment(moment().format('YYYY-MM-DD 23:59:59'))
+      },
       // 表头
       columns: [
         {
@@ -226,13 +263,21 @@ export default {
 
       // custom table alert & rowSelection
       options: {
-        alert: { show: true, clear: () => { this.selectedRowKeys = [] } },
+        // alert: { show: true, clear: () => { this.selectedRowKeys = [] } },
         rowSelection: {
           selectedRowKeys: this.selectedRowKeys,
           onChange: this.onSelectChange
         }
       },
-      optionAlertShow: false
+      // optionAlertShow: false
+    }
+  },
+  watch: {
+    startValue(val) {
+      console.log('startValue', val)
+    },
+    endValue(val) {
+      console.log('endValue', val)
     }
   },
   filters: {
@@ -251,22 +296,21 @@ export default {
     tableOption () {
       if (!this.optionAlertShow) {
         this.options = {
-          alert: { show: true, clear: () => { this.selectedRowKeys = [] } },
+          // alert: { show: true, clear: () => { this.selectedRowKeys = [] } },
           rowSelection: {
             selectedRowKeys: this.selectedRowKeys,
             onChange: this.onSelectChange
           }
         }
-        this.optionAlertShow = true
+        // this.optionAlertShow = true
       } else {
         this.options = {
           alert: false,
           rowSelection: null
         }
-        this.optionAlertShow = false
+        // this.optionAlertShow = false
       }
     },
-
     handleEdit (record) {
       console.log(record)
       this.$refs.modal.edit(record)
@@ -292,6 +336,28 @@ export default {
       this.queryParam = {
         date: moment(new Date())
       }
+    },
+    disabledStartDate (startValue) {
+      const endValue = this.endValue;
+      if (!startValue || !endValue) {
+        return false;
+      }
+      return startValue.valueOf() > endValue.valueOf();
+    },
+    disabledEndDate (endValue) {
+      const startValue = this.startValue;
+      if (!endValue || !startValue) {
+        return false;
+      }
+      return startValue.valueOf() >= endValue.valueOf();
+    },
+    handleStartOpenChange (open) {
+      if (!open) {
+        this.endOpen = true;
+      }
+    },
+    handleEndOpenChange (open) {
+      this.endOpen = open;
     }
   }
 }
